@@ -1,0 +1,18 @@
+{
+  "appTitle": "GsrApp - Gestion des Salles de réunion et des Réservations",
+  "roomsList": "Liste des Salles",
+  "reservations": "Réservations",
+  "statistics": "Statistiques",
+  "settings": "Paramètres",
+  "available": "Disponible",
+  "reserved": "Réservé",
+  "refection": "En réfection",
+  "degraded": "Dégradé",
+  "construction": "En construction",
+  "free": "Gratuit",
+  "rental": "En location",
+  "amount": "Montant",
+  "computers": "Ordinateurs",
+  "save": "Enregistrer",
+  "cancel": "Annuler"
+}

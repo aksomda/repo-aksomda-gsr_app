@@ -1,0 +1,18 @@
+{
+  "appTitle": "GsrApp - Room Management",
+  "roomsList": "Rooms List",
+  "reservations": "Reservations",
+  "statistics": "Statistics",
+  "settings": "Settings",
+  "available": "Available",
+  "reserved": "Reserved",
+  "refection": "Under Repair",
+  "degraded": "Degraded",
+  "construction": "Under Construction",
+  "free": "Free",
+  "rental": "Rental",
+  "amount": "Amount",
+  "computers": "Computers",
+  "save": "Save",
+  "cancel": "Cancel"
+}
