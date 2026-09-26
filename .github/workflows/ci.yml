@@ -6,15 +6,121 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  # Seuil de couverture de lignes (tests unitaires + widgets) sous lequel la CI échoue.
+  MIN_COVERAGE: 70
+
 jobs:
-  build:
+  flutter:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: subosito/flutter-action@v2
-      with:
-        flutter-version: '3.19.0'
-        cache: true
-    - run: flutter pub get
-    - run: flutter analyze
-    - run: flutter test
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze project source (lint)
+        run: flutter analyze --fatal-infos
+
+      - name: Run unit & widget tests with coverage
+        run: flutter test --coverage
+
+      - name: Check coverage threshold
+        run: |
+          python3 - <<'EOF'
+          import os, sys
+          hit = total = 0
+          skip = False
+          for line in open('coverage/lcov.info'):
+              if line.startswith('SF:'):
+                  # Le code généré par gen-l10n n'est pas compté.
+                  skip = 'l10n/app_localizations' in line
+              elif line.startswith('LH:') and not skip:
+                  hit += int(line[3:])
+              elif line.startswith('LF:') and not skip:
+                  total += int(line[3:])
+          pct = 100 * hit / total
+          minimum = float(os.environ['MIN_COVERAGE'])
+          print(f'Couverture : {pct:.1f} % (minimum {minimum:.0f} %)')
+          sys.exit(0 if pct >= minimum else 1)
+          EOF
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/lcov.info
+
+  integration:
+    # Les tests d'intégration ont besoin d'un appareil : bureau Linux sous Xvfb.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install Linux desktop toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev xvfb libsecret-1-dev libjsoncpp-dev
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run integration tests
+        run: xvfb-run -a flutter test integration_test -d linux
+
+  android-release:
+    # Vérifie que le build release compile. La signature de production se fait
+    # hors CI (voir README) : ici, signature de debug explicitement autorisée.
+    runs-on: ubuntu-latest
+    env:
+      ALLOW_DEBUG_SIGNING: '1'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Build release APK
+        run: |
+          flutter pub get
+          flutter build apk --release --dart-define=API_BASE_URL=https://api.example.com/api/gsr
+
+  server:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run server test suite
+        run: npm test

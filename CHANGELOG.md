@@ -4,6 +4,32 @@ Toutes les modifications notables de ce projet sont documentées dans ce
 fichier. Le format suit [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/)
 et le projet suit [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [1.2.0] - 2026-09-13
+
+### Ajouté
+- Module d'authentification complet (`lib/features/auth/`) : création de
+  compte (nom, prénom, matricule, téléphone, e-mail, mot de passe, direction,
+  service) et connexion (e-mail + mot de passe), avec `AuthProvider` et
+  écrans `LoginScreen` / `RegisterScreen`.
+- `AuthGate` dans `main.dart` : affiche la connexion tant que l'utilisateur
+  n'est pas authentifié, puis la navigation principale.
+- Carte "compte connecté" et bouton de déconnexion dans l'écran Paramètres.
+- Backend : table MySQL `users` (`server/sql/users.sql`), endpoints
+  `POST /api/gsr/auth/register` et `POST /api/gsr/auth/login`
+  (`server/controllers/userControllers.js`), mots de passe hachés avec
+  `bcryptjs`.
+- 5 tests unitaires (`auth_provider_test.dart`) et 5 tests de widgets
+  (`login_screen_test.dart`, `register_screen_test.dart`), plus un nouveau
+  scénario d'intégration couvrant le parcours connexion → navigation.
+
+### Corrigé
+- `server/routes/roomRoutes.js` importait `roomController` (singulier) au
+  lieu de `roomControllers` (nom réel du fichier) : le serveur ne démarrait
+  jamais.
+- Identifiants MySQL sortis du code source vers des variables d'environnement
+  (`server/.env`, non versionné) au lieu d'être écrits en clair dans
+  `config/db.js`.
+
 ## [1.1.0] - 2026-09-13
 
 ### Corrigé

@@ -1,15 +1,16 @@
-const express = require('express');
-const cors = require('cors');
-const { roomRoutes } = require('./routes/roomRoutes');
+require('dotenv').config();
 
-const app = express();
+const { productionConfigProblems } = require('./config/security');
+
+const problems = productionConfigProblems();
+if (problems.length > 0) {
+  console.error('Configuration de production invalide :\n - ' + problems.join('\n - '));
+  process.exit(1);
+}
+
+const app = require('./app');
+
 const PORT = process.env.PORT || 3000;
-
-app.use(cors());
-app.use(express.json());
-
-// Routes principales de l'API
-app.use('/api/gsr', roomRoutes);
 
 app.listen(PORT, () => {
   console.log(`Serveur Node.js api_GsrApp démarré sur le port ${PORT}`);

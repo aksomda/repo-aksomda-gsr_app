@@ -28,15 +28,18 @@ void main() {
       expect(provider.rooms, hasLength(2));
     });
 
-    test('getRoomsByStatus filtre correctement (insensible à la casse)', () async {
-      final provider = _buildProvider(FakeRoomRepository());
-      await provider.fetchRooms();
+    test(
+      'getRoomsByStatus filtre correctement (insensible à la casse)',
+      () async {
+        final provider = _buildProvider(FakeRoomRepository());
+        await provider.fetchRooms();
 
-      final disponibles = provider.getRoomsByStatus('Disponible');
+        final disponibles = provider.getRoomsByStatus('Disponible');
 
-      expect(disponibles, hasLength(1));
-      expect(disponibles.first.name, 'Salle Panafricaine');
-    });
+        expect(disponibles, hasLength(1));
+        expect(disponibles.first.name, 'Salle Panafricaine');
+      },
+    );
 
     test('addOrUpdateRoom ajoute une salle et rafraîchit la liste', () async {
       final repository = FakeRoomRepository();
@@ -52,7 +55,7 @@ void main() {
           location: 'Bloc E',
           hasComputer: false,
           computerCount: 0,
-          category: 'gratuit',
+          categoryId: 1,
           rentalAmount: 0,
           status: 'disponible',
         ),

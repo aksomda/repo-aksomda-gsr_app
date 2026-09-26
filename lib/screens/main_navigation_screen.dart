@@ -1,99 +1,94 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import '../features/rooms/presentation/screens/rooms_screen.dart';
-import '../features/reservations_rooms/presentation/screens/reservation_rooms_screen.dart';
-import '../features/statistics/presentation/screens/statistic_rooms_screen.dart';
-import '../features/categories_rooms/presentation/screens/category_rooms_screen.dart';
-import '../l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+import '../core/widgets/app_drawer.dart';
+import '../features/dashboard/presentation/screens/dashboard_screen.dart';
+import '../features/rooms/presentation/bloc/providers/room_provider.dart';
+import '../features/categories_rooms/presentation/bloc/providers/category_room_provider.dart';
+import '../features/directions_regionales/presentation/providers/direction_regionale_provider.dart';
+import '../features/notifications/presentation/providers/notification_provider.dart';
+import '../features/notifications/presentation/screens/notifications_screen.dart';
+import '../features/chat/presentation/screens/messages_screen.dart';
+import '../features/chat/presentation/screens/admin_message_threads_screen.dart';
+import '../features/auth/presentation/providers/auth_provider.dart';
+import '../l10n/l10n_extensions.dart';
 
-class MainNavigationScreen extends HookWidget {
+/// Écran racine de l'application : affiche le tableau de bord et héberge le
+/// tiroir de navigation. Les autres destinations sont poussées via
+/// [Navigator.push] (voir [AppDrawer]) afin que chaque écran dispose d'un
+/// bouton retour natif.
+class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final currentIndex = useState(0);
-    final l10n = AppLocalizations.of(context)!;
-
-    final screens = const [
-      RoomsScreen(),
-      CategoryRoomsScreen(),
-      ReservationRoomsScreen(),
-      StatisticRoomsScreen(),
-      SettingsConnectivityScreen(),
-    ];
-
-    return Scaffold(
-      body: screens[currentIndex.value],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex.value,
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.meeting_room, semanticLabel: l10n.roomsList),
-            label: l10n.roomsList,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.category, semanticLabel: l10n.categories),
-            label: l10n.categories,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book_online, semanticLabel: l10n.reservations),
-            label: l10n.reservations,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart, semanticLabel: l10n.statistics),
-            label: l10n.statistics,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings, semanticLabel: l10n.settings),
-            label: l10n.settings,
-          ),
-        ],
-        onTap: (index) => currentIndex.value = index,
-      ),
-    );
-  }
+  State<MainNavigationScreen> createState() => _MainNavigationScreenState();
 }
 
-class SettingsConnectivityScreen extends StatelessWidget {
-  const SettingsConnectivityScreen({super.key});
+class _MainNavigationScreenState extends State<MainNavigationScreen> {
+  NotificationProvider? _notificationProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _notificationProvider = context.read<NotificationProvider>();
+      _notificationProvider!.fetchNotifications();
+      _notificationProvider!.startPolling();
+
+      // Ces listes sont chargées au démarrage de l'app, avant la connexion :
+      // vides tant que l'utilisateur n'était pas authentifié.
+      context.read<RoomProvider>().fetchRooms();
+      context.read<CategoryRoomProvider>().fetchRooms();
+      context.read<DirectionRegionaleProvider>().fetchDirections();
+    });
+  }
+
+  @override
+  void dispose() {
+    _notificationProvider?.stopPolling();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final isAdmin = context.watch<AuthProvider>().currentUser?.isAdmin ?? false;
+
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.settings)),
-      body: ListView(
-        padding: const EdgeInsets.all(16.0),
-        children: [
-          const Semantics(
-            label: 'État de la connexion à l\'API',
-            child: ListTile(
-              leading: Icon(Icons.network_check, color: Colors.green),
-              title: Text('État de la Connexion MySQL (dbgsr)'),
-              subtitle: Text('Connecté via API Node.js (api_GsrApp)'),
-            ),
+      appBar: AppBar(
+        title: Text(context.l10n.home),
+        actions: [
+          Consumer<NotificationProvider>(
+            builder: (context, notifications, child) {
+              return IconButton(
+                tooltip: context.l10n.notifications,
+                icon: Badge(
+                  label: Text('${notifications.unreadCount}'),
+                  isLabelVisible: notifications.unreadCount > 0,
+                  child: const Icon(Icons.notifications_outlined),
+                ),
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const NotificationsScreen(),
+                  ),
+                ),
+              );
+            },
           ),
-          const Divider(),
-          Semantics(
-            label: 'Langue de l\'application',
-            child: ListTile(
-              leading: const Icon(Icons.language),
-              title: Text(l10n.appTitle),
-              subtitle: const Text('Français (FR) / English (EN)'),
-            ),
-          ),
-          const Divider(),
-          const Semantics(
-            label: 'Version de l\'application',
-            child: ListTile(
-              leading: Icon(Icons.info),
-              title: Text('Version de l\'application'),
-              subtitle: Text('GsrApp v1.1.0 production-ready'),
+          IconButton(
+            tooltip: context.l10n.messaging,
+            icon: const Icon(Icons.message_outlined),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => isAdmin
+                    ? const AdminMessageThreadsScreen()
+                    : const MessagesScreen(),
+              ),
             ),
           ),
         ],
       ),
+      drawer: const AppDrawer(),
+      body: const DashboardScreen(),
     );
   }
 }

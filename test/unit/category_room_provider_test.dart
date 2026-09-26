@@ -22,10 +22,10 @@ void main() {
       expect(provider.categoryRoom, hasLength(2));
     });
 
-    test('getCategoryRoomsByLibelleCat filtre par libellé', () async {
+    test('getCategoryRoomsByType filtre par type', () async {
       await provider.fetchRooms();
 
-      final gratuites = provider.getCategoryRoomsByLibelleCat('gratuit');
+      final gratuites = provider.getCategoryRoomsByType('gratuite');
 
       expect(gratuites, hasLength(1));
       expect(gratuites.first.libelleCat, 'GRATUIT');

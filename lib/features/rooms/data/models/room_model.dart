@@ -1,5 +1,15 @@
 import '../../domain/entities/room.dart';
 
+/// `room.status` est un entier en base (voir server/sql/README.md).
+const _statusByCode = {
+  1: 'disponible',
+  2: 'reservé',
+  3: 'en refection',
+  4: 'dégradé',
+  5: 'en construction',
+  6: 'occupé',
+};
+
 class RoomModel extends Room {
   RoomModel({
     super.id,
@@ -10,24 +20,35 @@ class RoomModel extends Room {
     required super.location,
     required super.hasComputer,
     required super.computerCount,
-    required super.category,
+    super.categoryId,
+    super.directionRegionaleId,
     required super.rentalAmount,
     required super.status,
   });
 
+  /// Lit une ligne de la table `room` (colonnes réelles). region/province/city
+  /// (entiers hérités) sont ignorés au profit de region_name/province_name/
+  /// city_name/location.
   factory RoomModel.fromJson(Map<String, dynamic> json) {
+    String text(dynamic v) => v is String ? v : '';
+    int? intOrNull(dynamic v) => v == null ? null : int.tryParse(v.toString());
+    final rawStatus = json['status'];
+
     return RoomModel(
       id: json['id'] is int ? json['id'] : int.tryParse(json['id'].toString()),
       name: json['name'] ?? '',
-      region: json['region'] ?? '',
-      province: json['province'] ?? '',
-      city: json['city'] ?? '',
-      location: json['location'] ?? '',
-      hasComputer: json['has_computer'] == 1 || json['has_computer'] == true,
-      computerCount: json['computer_count'] ?? 0,
-      category: json['category'] ?? 'gratuit',
-      rentalAmount: double.tryParse(json['rental_amount'].toString()) ?? 0.0,
-      status: json['status'] ?? 'disponible',
+      region: text(json['region_name']),
+      province: text(json['province_name']),
+      city: text(json['city_name']),
+      location: text(json['location']),
+      hasComputer: json['hasComputer'] == 1 || json['hasComputer'] == true,
+      computerCount: intOrNull(json['computerCount']) ?? 0,
+      categoryId: intOrNull(json['category_room_id']),
+      directionRegionaleId: json['structure_code']?.toString(),
+      rentalAmount: double.tryParse(json['rentalAmount'].toString()) ?? 0.0,
+      status: rawStatus is String
+          ? rawStatus
+          : _statusByCode[intOrNull(rawStatus)] ?? _statusByCode[1]!,
     );
   }
 
@@ -35,15 +56,22 @@ class RoomModel extends Room {
     return {
       if (id != null) 'id': id,
       'name': name,
-      'region': region,
-      'province': province,
-      'city': city,
+      'region_name': region,
+      'province_name': province,
+      'city_name': city,
       'location': location,
-      'has_computer': hasComputer ? 1 : 0,
-      'computer_count': computerCount,
-      'category': category,
-      'rental_amount': rentalAmount,
-      'status': status,
+      'hasLocation': 0,
+      'hasComputer': hasComputer ? 1 : 0,
+      'computerCount': computerCount,
+      'category_room_id': categoryId,
+      'structure_code': directionRegionaleId,
+      'rentalAmount': rentalAmount,
+      'status': _statusByCode.entries
+          .firstWhere(
+            (e) => e.value == status,
+            orElse: () => _statusByCode.entries.first,
+          )
+          .key,
     };
   }
 
@@ -57,7 +85,8 @@ class RoomModel extends Room {
       location: room.location,
       hasComputer: room.hasComputer,
       computerCount: room.computerCount,
-      category: room.category,
+      categoryId: room.categoryId,
+      directionRegionaleId: room.directionRegionaleId,
       rentalAmount: room.rentalAmount,
       status: room.status,
     );

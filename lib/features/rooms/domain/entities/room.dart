@@ -7,7 +7,8 @@ class Room {
   final String location;
   final bool hasComputer;
   final int computerCount;
-  final String category;
+  final int? categoryId;
+  final String? directionRegionaleId;
   final double rentalAmount;
   final String status;
 
@@ -20,7 +21,8 @@ class Room {
     required this.location,
     required this.hasComputer,
     required this.computerCount,
-    required this.category,
+    this.categoryId,
+    this.directionRegionaleId,
     required this.rentalAmount,
     required this.status,
   });

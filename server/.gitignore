@@ -1,0 +1,4 @@
+node_modules/
+.env
+# Cle privee de compte de service Firebase (jamais versionnee).
+firebase-service-account.json

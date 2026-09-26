@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Requise en release : seul le manifeste debug la déclarait. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="repo_aksomda_gsr_app"
+        android:label="GsrApp"
+        android:usesCleartextTraffic="false"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

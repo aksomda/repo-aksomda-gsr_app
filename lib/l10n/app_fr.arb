@@ -1,4 +1,5 @@
 {
+  "@@locale": "fr",
   "appTitle": "GsrApp - Gestion des Salles de réunion et des Réservations",
   "roomsList": "Liste des Salles",
   "categories": "Catégories",
@@ -15,5 +16,366 @@
   "amount": "Montant",
   "computers": "Ordinateurs",
   "save": "Enregistrer",
-  "cancel": "Annuler"
+  "cancel": "Annuler",
+  "delete": "Supprimer",
+  "edit": "Modifier",
+  "close": "Fermer",
+  "create": "Créer",
+  "all": "Toutes",
+  "fieldRequired": "Champ requis.",
+  "saveFailed": "Échec de l'enregistrement.",
+  "searchHint": "Rechercher...",
+  "clear": "Effacer",
+  "noResults": "Aucun résultat.",
+  "noOptions": "Aucune option disponible.",
+  "noData": "Aucune donnée disponible.",
+  "notProvided": "Non renseigné",
+  "confirmDeleteNamed": "Supprimer \"{name}\" ?",
+  "@confirmDeleteNamed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "errServerUnreachable": "Impossible de joindre le serveur. Vérifiez votre connexion.",
+  "errUnexpected": "Une erreur inattendue est survenue.",
+  "errServerStatus": "Erreur serveur ({code})",
+  "@errServerStatus": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "roomStatusAvailable": "Disponible",
+  "roomStatusReserved": "Réservée",
+  "roomStatusRefection": "En réfection",
+  "roomStatusDegraded": "Dégradée",
+  "roomStatusConstruction": "En construction",
+  "tabAvailable": "Disponibles",
+  "tabReserved": "Réservées",
+  "tabRefection": "Réfection",
+  "tabDegraded": "Dégradées",
+  "tabConstruction": "Construction",
+  "resPending": "En attente",
+  "resValidated": "Validées",
+  "resRejected": "Rejetées",
+  "roleAdmin": "Administrateur",
+  "roleAgent": "Agent",
+  "home": "Accueil",
+  "userAccounts": "Comptes utilisateurs",
+  "regionalDirections": "Directions régionales",
+  "structures": "Structures",
+  "notifications": "Notifications",
+  "messaging": "Messagerie",
+  "logout": "Se déconnecter",
+  "logoutConfirm": "Voulez-vous vraiment vous déconnecter ?",
+  "loginForgotInfo": "Contactez un administrateur pour réinitialiser votre mot de passe.",
+  "loginIdentifier": "Email ou identifiant",
+  "loginIdentifierRequired": "L'identifiant est requis.",
+  "password": "Mot de passe",
+  "showPassword": "Afficher le mot de passe",
+  "hidePassword": "Masquer le mot de passe",
+  "passwordRequired": "Le mot de passe est requis.",
+  "errorMessageLabel": "Message d'erreur",
+  "loginButtonLabel": "Bouton se connecter",
+  "signIn": "Se connecter",
+  "registerQuestion": "S'inscrire ?",
+  "forgotPassword": "Mot de passe oublié ?",
+  "noAccountCreate": "Pas encore de compte ? Créer un compte",
+  "dgiName": "Direction Générale des Impôts du Burkina Faso",
+  "roomsManagementTitle": "Gestion des Salles de Réunion",
+  "roomsAndReservationsTitle": "Gestion des Salles de Réunion et des Réservations",
+  "loginWelcome": "Connectez-vous à votre espace",
+  "loginTagline": "Réservez vos salles en toute simplicité",
+  "createAccountButtonLabel": "Bouton créer un compte",
+  "createAccount": "Créer un compte",
+  "footerInstitution": "© {year} - Votre institution",
+  "@footerInstitution": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "fieldRequiredNamed": "{label} est requis.",
+  "@fieldRequiredNamed": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "fieldSemantics": "Champ {label}",
+  "@fieldSemantics": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "registrationSent": "Inscription envoyée",
+  "accountCreatedSuccess": "Compte créé avec succès.",
+  "lastName": "Nom",
+  "firstName": "Prénom",
+  "matricule": "Matricule",
+  "phoneWhatsapp": "Téléphone (WhatsApp)",
+  "fleetNumber": "Numéro flotte",
+  "emailAddress": "Adresse e-mail",
+  "emailRequired": "L'adresse e-mail est requise.",
+  "emailInvalid": "Adresse e-mail invalide.",
+  "passwordMin6": "Le mot de passe doit contenir au moins 8 caractères.",
+  "structureFieldLabel": "Champ Structure",
+  "createAccountSubmitLabel": "Bouton créer le compte",
+  "createTheAccount": "Créer le compte",
+  "categorySaved": "Catégorie enregistrée.",
+  "deleteCategory": "Supprimer la catégorie",
+  "categoriesManagementTitle": "Gestion des catégories de salles de réunion",
+  "tabFree": "Gratuites",
+  "tabRental": "Location",
+  "noCategories": "Aucune catégorie de salle de réunion enregistrée.",
+  "categoryIcon": "Icône catégorie {name}",
+  "@categoryIcon": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "categoryFree": "Gratuite",
+  "categoryRentalAmount": "Location - {amount} FCFA",
+  "@categoryRentalAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "inactiveSuffix": " (inactive)",
+  "editCategory": "Modifier la catégorie",
+  "newCategory": "Nouvelle catégorie",
+  "label": "Libellé",
+  "labelRequired": "Le libellé est requis.",
+  "type": "Type",
+  "rentalAmountFcfa": "Montant de location (FCFA)",
+  "invalidAmount": "Montant invalide.",
+  "active": "Active",
+  "newMessageChooseAgent": "Nouveau message : choisir un agent",
+  "newMessage": "Nouveau message",
+  "noAgentMessages": "Aucun message d'agent pour le moment.\nUtilisez « Nouveau message » pour écrire à un agent.",
+  "messagingWithAdmin": "Messagerie avec l'administration",
+  "noMessages": "Aucun message pour le moment.",
+  "writeMessage": "Écrire un message...",
+  "dashRooms": "Salles",
+  "dashAvailableRooms": "Salles disponibles",
+  "dashValidationRate": "Taux de validation",
+  "dashRoomsByStatus": "Salles par statut",
+  "dashReservationsByStatus": "Réservations par statut",
+  "mostRequestedRooms": "Salles les plus demandées",
+  "dashReservationsByDirection": "Réservations par direction régionale",
+  "welcome": "Bienvenue",
+  "helloName": "Bonjour, {name}",
+  "@helloName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "dashSubtitle": "Voici l'activité de vos salles de réunion.",
+  "noRegionalDirections": "Aucune direction régionale trouvée.",
+  "noNotifications": "Aucune notification.",
+  "structuresLoadError": "Impossible de charger les structures. Touchez pour réessayer.",
+  "editStructure": "Modifier la structure",
+  "newStructure": "Nouvelle structure",
+  "codeCdi": "Code CDI",
+  "codeRequired": "Le code est requis.",
+  "noStructures": "Aucune structure enregistrée.",
+  "structureRequired": "La structure est requise.",
+  "loadingStructures": "Chargement des structures…",
+  "structure": "Structure",
+  "chooseStructure": "Choisir une structure",
+  "searchStructure": "Rechercher une structure…",
+  "noStructureFound": "Aucune structure trouvée.",
+  "rejectRequest": "Rejeter la demande",
+  "rejectReasonOptional": "Motif (optionnel)",
+  "reject": "Rejeter",
+  "validate": "Valider",
+  "reservationRequests": "Demandes de Réservation",
+  "iconPending": "Icône en attente",
+  "iconValidated": "Icône validées",
+  "iconRejected": "Icône rejetées",
+  "request": "Demander",
+  "noReservations": "Aucune réservation trouvée.",
+  "reservationStatusLabel": "Statut de la réservation : {status}",
+  "@reservationStatusLabel": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "roomNumberFallback": "Salle #{id}",
+  "@roomNumberFallback": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "reservationStructureLine": "Structure : {value}",
+  "@reservationStructureLine": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "reservationDateLine": "Date : {date} ({start} - {end})",
+  "@reservationDateLine": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "reservationReasonLine": "Motif : {reason}",
+  "@reservationReasonLine": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "selectDateSlot": "Sélectionnez une date et un créneau.",
+  "endAfterStart": "L'heure de fin doit être après l'heure de début.",
+  "noRoomAvailable": "Aucune salle disponible sur ce créneau.",
+  "chooseAvailableRoom": "Choisissez une salle disponible.",
+  "requestSent": "Demande de réservation envoyée.",
+  "requestFailed": "Échec de la demande.",
+  "newReservationRequest": "Nouvelle demande de réservation",
+  "date": "Date",
+  "startTime": "Début",
+  "endTime": "Fin",
+  "viewAvailableRooms": "Voir les salles disponibles",
+  "meetingSubject": "Objet de la réunion",
+  "subjectRequired": "L'objet est requis.",
+  "organizingStructure": "Structure organisatrice",
+  "sendRequest": "Envoyer la demande",
+  "roomSaved": "Salle enregistrée.",
+  "deleteRoom": "Supprimer la salle",
+  "noRooms": "Aucune salle enregistrée.",
+  "roomIcon": "Icône salle {name}",
+  "@roomIcon": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "noCategory": "Sans catégorie",
+  "roomSubtitle": "{city} - {status} ({category})",
+  "@roomSubtitle": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      },
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "amountFcfa": "{amount} FCFA",
+  "@amountFcfa": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "editRoom": "Modifier la salle",
+  "newRoom": "Nouvelle salle",
+  "roomName": "Nom de la salle",
+  "region": "Région",
+  "province": "Province",
+  "city": "Ville",
+  "location": "Emplacement (bloc, étage...)",
+  "category": "Catégorie",
+  "regionalDirection": "Direction régionale",
+  "status": "Statut",
+  "rentalAmountFree": "Montant de location (FCFA, 0 si gratuite)",
+  "computerCount": "Nombre d'ordinateurs",
+  "equippedComputers": "Équipée en ordinateurs",
+  "statsTitle": "Statistiques & Analytique GsrApp",
+  "reservationRequestsTitle": "Demandes de réservation",
+  "successRate": "Taux de succès",
+  "frequencyByDirection": "Fréquentation par direction régionale",
+  "noReservationsYet": "Aucune réservation enregistrée pour le moment.",
+  "requestsCount": "{count, plural, =1{{count} demande} other{{count} demandes}}",
+  "@requestsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "accountCreationFailed": "Échec de la création du compte.",
+  "userAccountsManagement": "Gestion des comptes utilisateurs",
+  "noPendingAccounts": "Aucun compte en attente de validation.",
+  "noStructureShort": "Sans structure",
+  "approveAccount": "Valider le compte",
+  "rejectAccount": "Rejeter le compte",
+  "temporaryPassword": "Mot de passe temporaire",
+  "atLeast6Chars": "Au moins 8 caractères.",
+  "role": "Rôle",
+  "email": "Email",
+  "connectedAccount": "Compte connecté",
+  "appLanguage": "Langue de l'application",
+  "appTheme": "Thème de l'application",
+  "darkMode": "Mode sombre",
+  "darkModeOn": "Thème sombre activé",
+  "lightModeOn": "Thème clair activé",
+  "logoutButtonLabel": "Bouton se déconnecter",
+  "identifier": "Identifiant",
+  "phone": "Téléphone",
+  "fleetNumberFull": "Numéro de flotte",
+  "language": "Langue",
+  "connChecking": "Vérification en cours…",
+  "connUnreachable": "Serveur injoignable",
+  "connDbDown": "API joignable, base de données indisponible",
+  "connOk": "Connecté à l'API et à MySQL ({ms} ms)",
+  "@connOk": {
+    "placeholders": {
+      "ms": {
+        "type": "int"
+      }
+    }
+  },
+  "connSemantics": "État de la connexion à l'API",
+  "connTitle": "État de la connexion MySQL (dbgsr)",
+  "retest": "Tester à nouveau",
+  "appVersion": "Version de l'application",
+  "aboutDescription": "Gestion des salles de réunion et des réservations.",
+  "errTimeout": "Le serveur met trop de temps à répondre.",
+  "errSessionExpired": "Session expirée, veuillez vous reconnecter.",
+  "retry": "Réessayer",
+  "activateAgentHint": "L'identifiant doit correspondre à un agent DGI existant.",
+  "loadMore": "Charger plus",
+  "changePhoto": "Changer la photo",
+  "removePhoto": "Supprimer la photo",
+  "photoUpdateSuccess": "Photo de profil mise à jour.",
+  "photoUpdateFailed": "Échec de l'envoi de la photo.",
+  "photoRemoveSuccess": "Photo de profil supprimée.",
+  "photoInvalidType": "Formats acceptés : JPEG, PNG, WEBP.",
+  "photoTooLarge": "Photo trop volumineuse (5 Mo maximum)."
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "9032079385",
+    "project_id": "gsr-app-54f34",
+    "storage_bucket": "gsr-app-54f34.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:9032079385:android:ad1f810ca98012a265b288",
+        "android_client_info": {
+          "package_name": "com.compagny.gsrapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAonxxeUAtcbJ3vfpOWtSeG19Z0H-hT--I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

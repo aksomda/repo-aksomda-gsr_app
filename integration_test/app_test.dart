@@ -1,63 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:provider/provider.dart';
-
-import 'package:gsr_app/features/rooms/data/datasources/room_remote_data_source.dart';
-import 'package:gsr_app/features/rooms/data/repositories/room_repository_impl.dart';
-import 'package:gsr_app/features/rooms/domain/usecases/get_rooms.dart';
-import 'package:gsr_app/features/rooms/domain/usecases/save_room.dart';
-import 'package:gsr_app/features/rooms/presentation/bloc/providers/room_provider.dart';
-
-import 'package:gsr_app/features/categories_rooms/data/datasources/category_room_remote_data_source.dart';
-import 'package:gsr_app/features/categories_rooms/data/repositories/category_room_repository_impl.dart';
-import 'package:gsr_app/features/categories_rooms/domain/usecases/get_category_rooms.dart';
-import 'package:gsr_app/features/categories_rooms/domain/usecases/save_category_room.dart';
-import 'package:gsr_app/features/categories_rooms/presentation/bloc/providers/category_room_provider.dart';
-
-import 'package:gsr_app/features/reservations_rooms/data/datasources/reservation_room_remote_data_source.dart';
-import 'package:gsr_app/features/reservations_rooms/data/repositories/reservation_room_repository_impl.dart';
-import 'package:gsr_app/features/reservations_rooms/domain/usecases/get_reservation_rooms.dart';
-import 'package:gsr_app/features/reservations_rooms/domain/usecases/save_reservation_room.dart';
-import 'package:gsr_app/features/reservations_rooms/presentation/providers/reservation_room_provider.dart';
 
 import 'package:gsr_app/l10n/app_localizations.dart';
+import 'package:gsr_app/main.dart' show AuthGate;
 import 'package:gsr_app/screens/main_navigation_screen.dart';
 
-/// Reproduit la composition réelle de l'application (voir lib/main.dart),
-/// avec les mêmes sources de données réseau. En environnement de test, les
-/// appels au backend échouent silencieusement (listes vides), ce qui permet
-/// de valider la navigation et le rendu sans dépendre d'un serveur actif.
-Widget _buildRealApp() {
-  final roomRepo = RoomRepositoryImpl(RoomRemoteDataSource());
-  final categoryRepo = CategoryRoomRepositoryImpl(CategoryRoomRemoteDataSource());
-  final reservationRepo = ReservationRoomRepositoryImpl(ReservationRoomRemoteDataSource());
+import '../test/helpers/fakes.dart';
 
-  return MultiProvider(
-    providers: [
-      ChangeNotifierProvider(
-        create: (_) => RoomProvider(
-          getRoomsUseCase: GetRooms(roomRepo),
-          saveRoomUseCase: SaveRoom(roomRepo),
-        )..fetchRooms(),
-      ),
-      ChangeNotifierProvider(
-        create: (_) => CategoryRoomProvider(
-          getCategoryRoomsUseCase: GetCategoryRooms(categoryRepo),
-          saveCategoryRoomUseCase: SaveCategoryRoom(categoryRepo),
-        )..fetchRooms(),
-      ),
-      ChangeNotifierProvider(
-        create: (_) => ReservationRoomProvider(
-          getReservationRoomsUseCase: GetReservationRooms(reservationRepo),
-          saveReservationRoomUseCase: SaveReservationRoom(reservationRepo),
-        )..fetchReservations(),
-      ),
-    ],
-    child: MaterialApp(
+/// Compose l'application avec des dépôts factices (aucun appel réseau), pour
+/// valider bout en bout la navigation et le parcours d'authentification.
+Widget _buildAppWithFakeAuth({required Widget home}) {
+  return buildFakeApp(
+    home: MaterialApp(
+      locale: const Locale('fr'),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const MainNavigationScreen(),
+      home: home,
     ),
   );
 }
@@ -66,39 +25,94 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Parcours utilisateur complet', () {
-    testWidgets('l\'application démarre sur l\'écran des salles avec 5 onglets', (tester) async {
-      await tester.pumpWidget(_buildRealApp());
+    testWidgets('l\'application démarre sur l\'accueil (tableau de bord)', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _buildAppWithFakeAuth(home: const MainNavigationScreen()),
+      );
       await tester.pumpAndSettle();
 
-      expect(find.text('Gestion des Salles de Réunion'), findsOneWidget);
-
-      final navBar = tester.widget<BottomNavigationBar>(find.byType(BottomNavigationBar));
-      expect(navBar.items, hasLength(5));
+      expect(find.text('Accueil'), findsOneWidget);
+      expect(find.text('Salles par statut'), findsOneWidget);
     });
 
-    testWidgets('l\'utilisateur peut naviguer vers chaque onglet sans erreur', (tester) async {
-      await tester.pumpWidget(_buildRealApp());
-      await tester.pumpAndSettle();
+    testWidgets(
+      'l\'utilisateur peut naviguer vers chaque écran depuis le menu sans erreur',
+      (tester) async {
+        await tester.pumpWidget(
+          _buildAppWithFakeAuth(home: const MainNavigationScreen()),
+        );
+        await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Catégories'));
-      await tester.pumpAndSettle();
-      expect(find.text('Gestion des catégories de salles de réunion'), findsOneWidget);
+        Future<void> openMenuAndTap(String label) async {
+          await tester.tap(find.byIcon(Icons.menu));
+          await tester.pumpAndSettle();
+          await tester.tap(find.text(label).last);
+          await tester.pumpAndSettle();
+        }
 
-      await tester.tap(find.text('Réservations'));
-      await tester.pumpAndSettle();
-      expect(find.text('Demandes de Réservation'), findsOneWidget);
+        await openMenuAndTap('Liste des Salles');
+        expect(find.text('Gestion des Salles de Réunion'), findsOneWidget);
 
-      await tester.tap(find.text('Statistiques'));
-      await tester.pumpAndSettle();
-      expect(find.text('Statistiques & Analytique GsrApp'), findsOneWidget);
+        await openMenuAndTap('Catégories');
+        expect(
+          find.text('Gestion des catégories de salles de réunion'),
+          findsOneWidget,
+        );
 
-      await tester.tap(find.text('Paramètres'));
-      await tester.pumpAndSettle();
-      expect(find.text('Version de l\'application'), findsOneWidget);
+        await openMenuAndTap('Réservations');
+        expect(find.text('Demandes de Réservation'), findsOneWidget);
 
-      await tester.tap(find.text('Liste des Salles'));
-      await tester.pumpAndSettle();
-      expect(find.text('Gestion des Salles de Réunion'), findsOneWidget);
-    });
+        await openMenuAndTap('Statistiques');
+        expect(find.text('Statistiques & Analytique GsrApp'), findsOneWidget);
+
+        await openMenuAndTap('Paramètres');
+        expect(find.text('Version de l\'application'), findsOneWidget);
+
+        await openMenuAndTap('Liste des Salles');
+        expect(find.text('Gestion des Salles de Réunion'), findsOneWidget);
+      },
+    );
+  });
+
+  group('Authentification', () {
+    testWidgets(
+      'affiche l\'écran de connexion puis la navigation principale après connexion réussie',
+      (tester) async {
+        // Taille mobile explicite : l'écran de connexion démarre sur l'accueil
+        // "Se connecter" / "Créer un compte" (voir LoginScreen).
+        await tester.binding.setSurfaceSize(const Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
+        await tester.pumpWidget(_buildAppWithFakeAuth(home: const AuthGate()));
+        await tester.pumpAndSettle();
+
+        // Non connecté : écran d'accueil affiché, pas de menu de navigation.
+        expect(
+          find.widgetWithText(ElevatedButton, 'Se connecter'),
+          findsOneWidget,
+        );
+        expect(find.byIcon(Icons.menu), findsNothing);
+
+        await tester.tap(find.widgetWithText(ElevatedButton, 'Se connecter'));
+        await tester.pumpAndSettle();
+
+        await tester.enterText(
+          find.byType(TextFormField).first,
+          'awa.ouedraogo@gsr.bf',
+        );
+        await tester.enterText(
+          find.byType(TextFormField).last,
+          'motdepasse123',
+        );
+        await tester.tap(find.widgetWithText(ElevatedButton, 'Se connecter'));
+        await tester.pumpAndSettle();
+
+        // Connecté : navigation principale affichée, sur l'accueil.
+        expect(find.text('Accueil'), findsOneWidget);
+        expect(find.byIcon(Icons.menu), findsOneWidget);
+      },
+    );
   });
 }

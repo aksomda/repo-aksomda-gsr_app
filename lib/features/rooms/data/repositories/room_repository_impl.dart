@@ -14,6 +14,19 @@ class RoomRepositoryImpl implements RoomRepository {
   }
 
   @override
+  Future<List<Room>> getAvailableRooms({
+    required String date,
+    required String startTime,
+    required String endTime,
+  }) {
+    return remoteDataSource.getAvailableRooms(
+      date: date,
+      startTime: startTime,
+      endTime: endTime,
+    );
+  }
+
+  @override
   Future<bool> saveRoom(Room room) async {
     return await remoteDataSource.saveRoom(RoomModel.fromEntity(room));
   }
